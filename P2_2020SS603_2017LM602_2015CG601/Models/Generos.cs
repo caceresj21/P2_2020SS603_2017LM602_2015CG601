@@ -7,7 +7,6 @@ namespace P2_2020SS603_2017LM602_2015CG601.Models
 
         [Key]
         public int Id { get; set; }
-        [Display(Name = "Género")]
         public string? Nombre { get; set; }
     }
 }

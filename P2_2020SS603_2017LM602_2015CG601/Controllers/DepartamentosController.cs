@@ -21,9 +21,9 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
         // GET: Departamentos
         public async Task<IActionResult> Index()
         {
-              return _context.Departamentos != null ? 
-                          View(await _context.Departamentos.ToListAsync()) :
-                          Problem("Entity set 'RegistroCovidContext.Departamentos'  is null.");
+            return _context.Departamentos != null ?
+                        View(await _context.Departamentos.ToListAsync()) :
+                        Problem("Entity set 'covidDbContext.Departamentos'  is null.");
         }
 
         // GET: Departamentos/Details/5
@@ -142,21 +142,21 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
         {
             if (_context.Departamentos == null)
             {
-                return Problem("Entity set 'RegistroCovidContext.Departamentos'  is null.");
+                return Problem("Entity set 'covidDbContext.Departamentos'  is null.");
             }
             var departamentos = await _context.Departamentos.FindAsync(id);
             if (departamentos != null)
             {
                 _context.Departamentos.Remove(departamentos);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DepartamentosExists(int id)
         {
-          return (_context.Departamentos?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Departamentos?.Any(e => e.id == id)).GetValueOrDefault();
         }
     }
 }
