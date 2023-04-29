@@ -8,25 +8,29 @@ using Microsoft.EntityFrameworkCore;
 using P2_2020SS603_2017LM602_2015CG601.Models;
 
 namespace P2_2020SS603_2017LM602_2015CG601.Controllers
+
+
+
+
 {
-    public class GenerosController : Controller
+    public class generosController : Controller
     {
         private readonly RegistroCovidContext _context;
 
-        public GenerosController(RegistroCovidContext context)
+        public generosController(RegistroCovidContext context)
         {
             _context = context;
         }
 
-        // GET: Generos
+        // GET: generos
         public async Task<IActionResult> Index()
         {
-              return _context.Generos != null ? 
-                          View(await _context.Generos.ToListAsync()) :
-                          Problem("Entity set 'RegistroCovidContext.Generos'  is null.");
+            return _context.Generos != null ?
+                        View(await _context.Generos.ToListAsync()) :
+                        Problem("Entity set 'covidDbContext.generos'  is null.");
         }
 
-        // GET: Generos/Details/5
+        // GET: generos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Generos == null)
@@ -44,18 +48,18 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
             return View(generos);
         }
 
-        // GET: Generos/Create
+        // GET: generos/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Generos/Create
+        // POST: generos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre")] Generos generos)
+        public async Task<IActionResult> Create([Bind("id_genero,genero")] Generos generos)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +70,7 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
             return View(generos);
         }
 
-        // GET: Generos/Edit/5
+        // GET: generos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Generos == null)
@@ -82,12 +86,12 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
             return View(generos);
         }
 
-        // POST: Generos/Edit/5
+        // POST: generos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre")] Generos generos)
+        public async Task<IActionResult> Edit(int id, [Bind("id_genero,genero")] Generos generos)
         {
             if (id != generos.Id)
             {
@@ -103,7 +107,7 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GenerosExists(generos.Id))
+                    if (!generosExists(generos.Id))
                     {
                         return NotFound();
                     }
@@ -117,7 +121,7 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
             return View(generos);
         }
 
-        // GET: Generos/Delete/5
+        // GET: generos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Generos == null)
@@ -135,28 +139,29 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
             return View(generos);
         }
 
-        // POST: Generos/Delete/5
+        // POST: generos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Generos == null)
             {
-                return Problem("Entity set 'RegistroCovidContext.Generos'  is null.");
+                return Problem("Entity set 'covidDbContext.generos'  is null.");
             }
             var generos = await _context.Generos.FindAsync(id);
             if (generos != null)
             {
                 _context.Generos.Remove(generos);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenerosExists(int id)
+        private bool generosExists(int id)
         {
-          return (_context.Generos?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Generos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
+

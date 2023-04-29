@@ -19,144 +19,40 @@ namespace P2_2020SS603_2017LM602_2015CG601.Controllers
         }
 
         // GET: CasosReportados
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.CasosReportados != null ? 
-                          View(await _context.CasosReportados.ToListAsync()) :
-                          Problem("Entity set 'RegistroCovidContext.CasosReportados'  is null.");
-        }
+            var listadodepartamentos = (from m in _context.Departamentos
+                                        select m).ToList();
+            ViewData["listadodepartamentos"] = new SelectList(listadodepartamentos, "id", "nombre");
 
-        // GET: CasosReportados/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.CasosReportados == null)
-            {
-                return NotFound();
-            }
+            var listadogenero = (from m in _context.Generos
+                                 select m).ToList();
+            ViewData["listadogenero"] = new SelectList(listadogenero, "id", "nombre");
 
-            var casosReportados = await _context.CasosReportados
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (casosReportados == null)
-            {
-                return NotFound();
-            }
+            var listadocovids = (from c in _context.CasosReportados
+                                 join d in _context.Departamentos on c.departamento_id equals d.id
+                                 join g in _context.Generos on c.genero_id equals g.Id
+                                 select new
+                                 {
+                                     departamentos = d.nombre,
+                                     genero = g.Nombre,
+                                     confirmados = c.confirmados,
+                                     recuperados = c.recuperados,
+                                     fallecidos = c.fallecidos,
 
-            return View(casosReportados);
-        }
+                                 }).ToList();
+            ViewData["listadocovid"] = listadocovids;
 
-        // GET: CasosReportados/Create
-        public IActionResult Create()
-        {
             return View();
-        }
 
-        // POST: CasosReportados/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,departamento_id,genero_id,confirmados,recuperados,fallecidos")] CasosReportados casosReportados)
+
+        }
+        public IActionResult CrearDatos(CasosReportados nuevoDato)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(casosReportados);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(casosReportados);
+            _context.Add(nuevoDato);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        // GET: CasosReportados/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.CasosReportados == null)
-            {
-                return NotFound();
-            }
-
-            var casosReportados = await _context.CasosReportados.FindAsync(id);
-            if (casosReportados == null)
-            {
-                return NotFound();
-            }
-            return View(casosReportados);
-        }
-
-        // POST: CasosReportados/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,departamento_id,genero_id,confirmados,recuperados,fallecidos")] CasosReportados casosReportados)
-        {
-            if (id != casosReportados.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(casosReportados);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CasosReportadosExists(casosReportados.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(casosReportados);
-        }
-
-        // GET: CasosReportados/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.CasosReportados == null)
-            {
-                return NotFound();
-            }
-
-            var casosReportados = await _context.CasosReportados
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (casosReportados == null)
-            {
-                return NotFound();
-            }
-
-            return View(casosReportados);
-        }
-
-        // POST: CasosReportados/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.CasosReportados == null)
-            {
-                return Problem("Entity set 'RegistroCovidContext.CasosReportados'  is null.");
-            }
-            var casosReportados = await _context.CasosReportados.FindAsync(id);
-            if (casosReportados != null)
-            {
-                _context.CasosReportados.Remove(casosReportados);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CasosReportadosExists(int id)
-        {
-          return (_context.CasosReportados?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
